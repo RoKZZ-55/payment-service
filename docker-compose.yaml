@@ -1,0 +1,28 @@
+services:
+  payment-service:
+    image: payment-service:latest
+    container_name: payment-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - 8000:8000
+
+  postgres:
+    image: postgres:14.2
+    container_name: payment-service-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres123"
+    volumes:
+      - pg_storage:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  pg_storage:
