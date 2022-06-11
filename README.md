@@ -7,10 +7,11 @@
 4) [github.com/sirupsen/logrus](https://github.com/sirupsen/logrus) - Логгер
 ## Установка:
    1) Скачать текущий репозиторий
-   2) Скачать докер [docker.com/get-started/](https://www.docker.com/get-started/)
+   2) Скачать docker [docker.com/get-started/](https://www.docker.com/get-started/)
    3) Собрать все сервисы описанные в docker-compose. `docker compose build`
    4) Запустить все сервисы описанные в  docker-compose. `docker compose up -d`
-   5) Платежный сервис готов к работе
+   5) Выполнить миграцию таблицы в БД, файл `migratinos/up.sql`
+   6) Платежный сервис готов к работе
 ## API:
 1) Создание платежа. Запрос: POST http://127.0.0.1:8000/create-transactions
 
