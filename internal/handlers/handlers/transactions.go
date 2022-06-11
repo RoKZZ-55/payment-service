@@ -24,13 +24,9 @@ func (h *HandlerTransaction) HandCreatePayment() http.HandlerFunc {
 			utils.Error(w, r, http.StatusBadRequest, err)
 			return
 		}
-
-		u := &model.User{
-			ID:    req.ID,
-			Email: req.Email,
-		}
 		t := &model.Transactions{
-			User:     *u,
+			UserID:   req.ID,
+			Email:    req.Email,
 			Sum:      req.Sum,
 			Currency: req.Currency,
 		}
@@ -39,5 +35,6 @@ func (h *HandlerTransaction) HandCreatePayment() http.HandlerFunc {
 			utils.Error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
+		utils.Respond(w, r, http.StatusCreated, "Status: НОВЫЙ")
 	}
 }
