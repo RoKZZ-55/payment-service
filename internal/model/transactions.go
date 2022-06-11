@@ -4,7 +4,7 @@ type Transactions struct {
 	UserID             uint
 	TransactID         uint
 	Email              string
-	Sum                float64
+	Sum                float32
 	Currency           string
 	DateTimeCreate     string
 	DateTimeLastChange string

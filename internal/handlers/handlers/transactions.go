@@ -13,9 +13,9 @@ type HandlerTransaction struct {
 
 func (h *HandlerTransaction) HandCreatePayment() http.HandlerFunc {
 	type request struct {
-		ID       uint    `json:"id"`
+		ID       uint    `json:"user-id"`
 		Email    string  `json:"email"`
-		Sum      float64 `json:"sum"`
+		Sum      float32 `json:"sum"`
 		Currency string  `json:"currency"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
