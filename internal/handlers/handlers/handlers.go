@@ -6,8 +6,8 @@ import (
 )
 
 type Handlers struct {
-	service             services.Service
-	handlersTransaction *HandlerTransaction
+	service        services.Service
+	paymentHandler *PaymentHandler
 }
 
 func New(service services.Service) *Handlers {
@@ -16,13 +16,13 @@ func New(service services.Service) *Handlers {
 	}
 }
 
-func (h *Handlers) Transact() handlers.HandTransact {
-	if h.handlersTransaction != nil {
-		return h.handlersTransaction
+func (h *Handlers) Payment() handlers.PaymentHandler {
+	if h.paymentHandler != nil {
+		return h.paymentHandler
 	}
 
-	h.handlersTransaction = &HandlerTransaction{
+	h.paymentHandler = &PaymentHandler{
 		handler: h,
 	}
-	return h.handlersTransaction
+	return h.paymentHandler
 }

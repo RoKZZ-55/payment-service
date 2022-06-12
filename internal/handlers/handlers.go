@@ -2,10 +2,15 @@ package handlers
 
 import "net/http"
 
-type Hand interface {
-	Transact() HandTransact
+type Handlers interface {
+	Payment() PaymentHandler
 }
 
-type HandTransact interface {
-	HandCreatePayment() http.HandlerFunc
+type PaymentHandler interface {
+	CreatePayment() http.HandlerFunc
+	ChangePaymentStatus() http.HandlerFunc
+	GetPaymentStatusByID() http.HandlerFunc
+	GetPaymentsByID() http.HandlerFunc
+	GetPaymentsByEmail() http.HandlerFunc
+	CancelPaymentByID() http.HandlerFunc
 }

@@ -6,8 +6,8 @@ import (
 )
 
 type Service struct {
-	storage             storages.Storage
-	transactionsService *TransactionsService
+	storage        storages.Storage
+	paymentService *PaymentService
 }
 
 func New(storage storages.Storage) *Service {
@@ -16,13 +16,13 @@ func New(storage storages.Storage) *Service {
 	}
 }
 
-func (s *Service) Transact() services.TransactionsService {
-	if s.transactionsService != nil {
-		return s.transactionsService
+func (s *Service) Payment() services.PaymentService {
+	if s.paymentService != nil {
+		return s.paymentService
 	}
 
-	s.transactionsService = &TransactionsService{
+	s.paymentService = &PaymentService{
 		service: s,
 	}
-	return s.transactionsService
+	return s.paymentService
 }
