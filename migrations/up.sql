@@ -1,4 +1,4 @@
-CREATE TYPE status AS ENUM ('НОВЫЙ', 'УСПЕХ', 'НЕУСПЕХ', 'ОШИБКА');
+CREATE TYPE status AS ENUM ('НОВЫЙ', 'УСПЕХ', 'НЕУСПЕХ', 'ОШИБКА', 'ОТМЕНЕН');
 CREATE TABLE transact (
     transact_id bigserial not null,
     user_id bigserial not null,

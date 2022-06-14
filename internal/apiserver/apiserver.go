@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"payment-service/config"
 	"payment-service/internal/handlers/handlers"
+	"payment-service/internal/middleware"
 	"payment-service/internal/services/service"
 	"payment-service/internal/storages/dbstorage"
 )
@@ -21,8 +22,13 @@ func Start(cfg *config.Config, router *mux.Router) error {
 	defer db.Close()
 
 	log.Info("payment service launch")
-	srv := newServer(router, handlers.New(service.New(dbstorage.New(db))))
-	return http.ListenAndServe(cfg.BindAddr, srv)
+	srv := newServer(router, handlers.New(service.New(dbstorage.New(db))), middleware.New(cfg))
+	return http.ListenAndServeTLS(
+		cfg.BindAddr,
+		"/go/bin/config/server.crt",
+		"/go/bin/config/server.key",
+		srv,
+	)
 }
 
 func newDB(pq config.Postgres) (*sql.DB, error) {

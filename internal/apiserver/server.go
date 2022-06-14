@@ -4,17 +4,20 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"payment-service/internal/handlers/handlers"
+	"payment-service/internal/middleware"
 )
 
 type Server struct {
-	router  *mux.Router
-	handler *handlers.Handlers
+	router     *mux.Router
+	handler    *handlers.Handlers
+	middleware *middleware.Auth
 }
 
-func newServer(router *mux.Router, handler *handlers.Handlers) *Server {
+func newServer(router *mux.Router, handler *handlers.Handlers, middleware *middleware.Auth) *Server {
 	s := &Server{
-		router:  router,
-		handler: handler,
+		router:     router,
+		handler:    handler,
+		middleware: middleware,
 	}
 
 	s.configureRouter()
@@ -32,4 +35,5 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/get-payments-by-userid/{id}", s.handler.Payment().GetPaymentsByID()).Methods("POST")
 	s.router.HandleFunc("/get-payments-by-email/{email}", s.handler.Payment().GetPaymentsByEmail()).Methods("POST")
 	s.router.HandleFunc("/cancel-payment-by-id/{id}", s.handler.Payment().CancelPaymentByID()).Methods("POST")
+	s.router.Use(s.middleware.BasicAuth)
 }

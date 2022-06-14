@@ -9,7 +9,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - 8000:8000
+      - 443:443
 
   postgres:
     image: postgres:14.2

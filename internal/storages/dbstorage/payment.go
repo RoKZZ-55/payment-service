@@ -34,7 +34,8 @@ func (s *PaymentStorage) ChangePaymentStatus(t *model.Transactions) error {
 	if statusDB == "УСПЕХ" || statusDB == "НЕУСПЕХ" {
 		return errors.New(fmt.Sprintf("statuses 'УСПЕХ', 'НЕУСПЕХ' cannot be changed "))
 	}
-	err = s.storage.db.QueryRow("UPDATE transact SET status = $1 WHERE transact_id = $2",
+	err = s.storage.db.QueryRow(
+		"UPDATE transact SET status = $1, date_time_last_change = now() WHERE transact_id = $2",
 		t.Status,
 		t.TransactID,
 	).Err()
@@ -47,7 +48,10 @@ func (s *PaymentStorage) GetPaymentStatusByID(transactID uint64) (status string,
 }
 
 func (s *PaymentStorage) GetPaymentsByID(userID uint64) (transact []model.Transactions, err error) {
-	rows, err := s.storage.db.Query("SELECT * FROM transact WHERE user_id = $1 ORDER BY transact_id DESC", userID)
+	rows, err := s.storage.db.Query(
+		"SELECT * FROM transact WHERE user_id = $1 ORDER BY date_time_last_change DESC",
+		userID,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -64,12 +68,18 @@ func (s *PaymentStorage) GetPaymentsByID(userID uint64) (transact []model.Transa
 			continue
 		}
 		transact = append(transact, t)
+	}
+	if transact == nil {
+		return nil, errors.New("transactions not found")
 	}
 	return transact, err
 }
 
 func (s *PaymentStorage) GetPaymentsByEmail(email string) (transact []model.Transactions, err error) {
-	rows, err := s.storage.db.Query("SELECT * FROM transact WHERE email = $1 ORDER BY transact_id DESC", email)
+	rows, err := s.storage.db.Query(
+		"SELECT * FROM transact WHERE email = $1 ORDER BY date_time_last_change DESC",
+		email,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -86,6 +96,9 @@ func (s *PaymentStorage) GetPaymentsByEmail(email string) (transact []model.Tran
 			continue
 		}
 		transact = append(transact, t)
+	}
+	if transact == nil {
+		return nil, errors.New("transactions not found")
 	}
 	return transact, err
 }
@@ -99,6 +112,10 @@ func (s *PaymentStorage) CancelPaymentByID(transactID uint64) error {
 	if statusDB == "УСПЕХ" || statusDB == "НЕУСПЕХ" {
 		return errors.New(fmt.Sprintf("statuses 'УСПЕХ', 'НЕУСПЕХ' cannot be changed "))
 	}
-	//err = s.storage.db.QueryRow()
-	return nil
+	err = s.storage.db.QueryRow(
+		"UPDATE transact SET status = $1, date_time_last_change = now() WHERE transact_id = $2",
+		"ОТМЕНЕН",
+		transactID,
+	).Err()
+	return err
 }

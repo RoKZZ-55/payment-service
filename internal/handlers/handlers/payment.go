@@ -123,6 +123,6 @@ func (h *PaymentHandler) CancelPaymentByID() http.HandlerFunc {
 			utils.Error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		utils.Respond(w, r, http.StatusOK, "Payment canceled")
+		utils.Respond(w, r, http.StatusOK, "Payment canceled successfully")
 	}
 }
