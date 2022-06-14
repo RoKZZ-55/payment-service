@@ -21,10 +21,10 @@ ___
 Request body(data-raw):
 ````json
 {
-    "user-id": uint,
-    "email": string,
-    "sum": float,
-    "currency": string(макс кол-во символов 3. Пример: usd, eur, rub)
+    "user-id": 1,
+    "email": "1@email.com",
+    "sum": 100,
+    "currency": "usd"
 }
 ````
 Response body(JSON):
@@ -42,8 +42,8 @@ Password: service
 Request body(data-raw):
 ````json
 {
-    "transact-id": uint,
-    "status": string
+    "transact-id": 1,
+    "status": "УСПЕХ"
 }
 ````
 Response body(JSON):
@@ -68,14 +68,14 @@ Response body(JSON):
 ````json
 [
     {
-        "user-id": uint,
-        "transact-id": uint,
-        "email": string,
-        "sum": float,
-        "currency": string(макс кол-во символов 3. Пример: usd, eur, rub),
-        "date-time-create": string,
-        "date-time-last-change": string,
-        "status": string
+        "user-id": 1,
+        "transact-id": 1,
+        "email": "1@email.com",
+        "sum": 100,
+        "currency": "usd",
+        "date-time-create": "2022-06-13T19:35:56.974408Z",
+        "date-time-last-change": "2022-06-13T19:40:27.529686Z",
+        "status": "УСПЕХ"
     }
 ]
 ````
@@ -87,16 +87,16 @@ Request body: none
 Response body(JSON):
 ````json
 [
-    {
-        "user-id": uint,
-        "transact-id": uint,
-        "email": string,
-        "sum": float,
-        "currency": string(макс кол-во символов 3. Пример: usd, eur, rub),
-        "date-time-create": string,
-        "date-time-last-change": string,
-        "status": string
-    }
+  {
+    "user-id": 1,
+    "transact-id": 1,
+    "email": "1@email.com",
+    "sum": 100,
+    "currency": "usd",
+    "date-time-create": "2022-06-13T19:35:56.974408Z",
+    "date-time-last-change": "2022-06-13T19:40:27.529686Z",
+    "status": "УСПЕХ"
+  }
 ]
 ````
 ___
