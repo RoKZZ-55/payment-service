@@ -7,10 +7,10 @@ type Storage interface {
 }
 
 type PaymentStorage interface {
-	CreatePayment(transact *model.Transactions) error
-	ChangePaymentStatus(transact *model.Transactions) error
+	CreatePayment(transact *model.Transaction) error
+	ChangePaymentStatus(transact *model.Transaction) error
 	GetPaymentStatusByID(transactID uint64) (status string, err error)
-	GetPaymentsByID(userID uint64) (transact []model.Transactions, err error)
-	GetPaymentsByEmail(email string) (transact []model.Transactions, err error)
+	GetPaymentsByID(userID uint64) (transact []model.Transaction, err error)
+	GetPaymentsByEmail(email string) (transact []model.Transaction, err error)
 	CancelPaymentByID(transactID uint64) error
 }

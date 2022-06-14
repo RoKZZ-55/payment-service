@@ -1,6 +1,6 @@
 package model
 
-type Transactions struct {
+type Transaction struct {
 	TransactID         uint64  `json:"transact-id"`
 	UserID             uint64  `json:"user-id"`
 	Email              string  `json:"email"`

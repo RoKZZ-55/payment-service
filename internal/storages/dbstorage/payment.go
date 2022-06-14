@@ -11,7 +11,7 @@ type PaymentStorage struct {
 	storage *Storage
 }
 
-func (s *PaymentStorage) CreatePayment(t *model.Transactions) error {
+func (s *PaymentStorage) CreatePayment(t *model.Transaction) error {
 	return s.storage.db.QueryRow(
 		"INSERT INTO transact (user_id, email, sum, currency, date_time_create, date_time_last_change, status) "+
 			"VALUES ($1, $2, $3, $4, now(), now(), $5)",
@@ -23,7 +23,7 @@ func (s *PaymentStorage) CreatePayment(t *model.Transactions) error {
 	).Err()
 }
 
-func (s *PaymentStorage) ChangePaymentStatus(t *model.Transactions) error {
+func (s *PaymentStorage) ChangePaymentStatus(t *model.Transaction) error {
 	var statusDB string
 	err := s.storage.db.QueryRow("SELECT status FROM transact WHERE transact_id = $1",
 		t.TransactID,
@@ -47,7 +47,7 @@ func (s *PaymentStorage) GetPaymentStatusByID(transactID uint64) (status string,
 	return status, err
 }
 
-func (s *PaymentStorage) GetPaymentsByID(userID uint64) (transact []model.Transactions, err error) {
+func (s *PaymentStorage) GetPaymentsByID(userID uint64) (transact []model.Transaction, err error) {
 	rows, err := s.storage.db.Query(
 		"SELECT * FROM transact WHERE user_id = $1 ORDER BY date_time_last_change DESC",
 		userID,
@@ -58,7 +58,7 @@ func (s *PaymentStorage) GetPaymentsByID(userID uint64) (transact []model.Transa
 	defer rows.Close()
 
 	for rows.Next() {
-		t := model.Transactions{}
+		t := model.Transaction{}
 		err := rows.Scan(
 			&t.TransactID, &t.UserID, &t.Email, &t.Sum, &t.Currency,
 			&t.DateTimeCreate, &t.DateTimeLastChange, &t.Status,
@@ -75,7 +75,7 @@ func (s *PaymentStorage) GetPaymentsByID(userID uint64) (transact []model.Transa
 	return transact, err
 }
 
-func (s *PaymentStorage) GetPaymentsByEmail(email string) (transact []model.Transactions, err error) {
+func (s *PaymentStorage) GetPaymentsByEmail(email string) (transact []model.Transaction, err error) {
 	rows, err := s.storage.db.Query(
 		"SELECT * FROM transact WHERE email = $1 ORDER BY date_time_last_change DESC",
 		email,
@@ -86,7 +86,7 @@ func (s *PaymentStorage) GetPaymentsByEmail(email string) (transact []model.Tran
 	defer rows.Close()
 
 	for rows.Next() {
-		t := model.Transactions{}
+		t := model.Transaction{}
 		err := rows.Scan(
 			&t.TransactID, &t.UserID, &t.Email, &t.Sum, &t.Currency,
 			&t.DateTimeCreate, &t.DateTimeLastChange, &t.Status,

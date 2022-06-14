@@ -26,7 +26,7 @@ func (h *PaymentHandler) CreatePayment() http.HandlerFunc {
 			utils.Error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		t := &model.Transactions{
+		t := &model.Transaction{
 			UserID:   req.ID,
 			Email:    req.Email,
 			Sum:      req.Sum,
@@ -52,7 +52,7 @@ func (h *PaymentHandler) ChangePaymentStatus() http.HandlerFunc {
 			utils.Error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		t := &model.Transactions{
+		t := &model.Transaction{
 			TransactID: req.TransactID,
 			Status:     req.Status,
 		}
@@ -60,7 +60,7 @@ func (h *PaymentHandler) ChangePaymentStatus() http.HandlerFunc {
 			utils.Error(w, r, http.StatusUnprocessableEntity, err)
 			return
 		}
-		utils.Respond(w, r, http.StatusCreated, "Payment status changed successfully")
+		utils.Respond(w, r, http.StatusOK, "Payment status changed successfully")
 	}
 }
 
