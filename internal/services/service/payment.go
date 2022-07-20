@@ -4,46 +4,48 @@ import (
 	"errors"
 	valid "github.com/asaskevich/govalidator"
 	"payment-service/internal/model"
+	"strconv"
 )
 
 type PaymentService struct {
 	service *Service
 }
 
-func (s *PaymentService) CreatePayment(t *model.Transaction) error {
+func (s *PaymentService) Create(t *model.Transaction) error {
 	if !valid.IsEmail(t.Email) {
 		return errors.New("invalid email format")
 	}
 	if len(t.Currency) != 3 {
 		return errors.New("invalid currency format, currency name consists of 3 characters")
 	}
-	return s.service.storage.Payment().CreatePayment(t)
+	return s.service.storage.Payment().Create(t)
 }
 
-func (s *PaymentService) ChangePaymentStatus(t *model.Transaction) error {
+func (s *PaymentService) ChangeStatus(t *model.Transaction) error {
 	switch t.Status {
 	case "УСПЕХ", "НЕУСПЕХ", "ОШИБКА":
-		return s.service.storage.Payment().ChangePaymentStatus(t)
+		return s.service.storage.Payment().ChangeStatus(t)
 	default:
 		return errors.New("wrong status")
 	}
 }
 
-func (s *PaymentService) GetPaymentStatusByID(transactID uint64) (status string, err error) {
-	return s.service.storage.Payment().GetPaymentStatusByID(transactID)
+func (s *PaymentService) GetStatus(transactID uint64) (status string, err error) {
+	return s.service.storage.Payment().GetStatus(transactID)
 }
 
-func (s *PaymentService) GetPaymentsByID(userID uint64) (transact []model.Transaction, err error) {
-	return s.service.storage.Payment().GetPaymentsByID(userID)
-}
-
-func (s *PaymentService) GetPaymentsByEmail(email string) (transact []model.Transaction, err error) {
-	if !valid.IsEmail(email) {
-		return nil, errors.New("invalid email format")
+func (s *PaymentService) GetByEmailOrID(path string) (transact []model.Transaction, err error) {
+	p := new(model.Transaction)
+	if valid.IsEmail(path) {
+		p.Email = path
+		return s.service.storage.Payment().GetByEmailOrID(p)
 	}
-	return s.service.storage.Payment().GetPaymentsByEmail(email)
+	if p.UserID, err = strconv.ParseUint(path, 10, 64); err == nil {
+		return s.service.storage.Payment().GetByEmailOrID(p)
+	}
+	return nil, errors.New("incorrect path, you must specify an email or user id")
 }
 
-func (s *PaymentService) CancelPaymentByID(transactID uint64) error {
-	return s.service.storage.Payment().CancelPaymentByID(transactID)
+func (s *PaymentService) Cancel(transactID uint64) error {
+	return s.service.storage.Payment().Cancel(transactID)
 }

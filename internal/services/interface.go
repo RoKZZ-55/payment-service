@@ -7,10 +7,9 @@ type Service interface {
 }
 
 type PaymentService interface {
-	CreatePayment(transact *model.Transaction) error
-	ChangePaymentStatus(transact *model.Transaction) error
-	GetPaymentStatusByID(transactID uint64) (status string, err error)
-	GetPaymentsByID(userID uint64) (transact []model.Transaction, err error)
-	GetPaymentsByEmail(email string) (transact []model.Transaction, err error)
-	CancelPaymentByID(transactID uint64) error
+	Create(transact *model.Transaction) error
+	ChangeStatus(transact *model.Transaction) error
+	GetStatus(transactID uint64) (status string, err error)
+	GetByEmailOrID(path string) (transact []model.Transaction, err error)
+	Cancel(transactID uint64) error
 }

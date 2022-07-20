@@ -7,10 +7,9 @@ type Handlers interface {
 }
 
 type PaymentHandler interface {
-	CreatePayment() http.HandlerFunc
-	ChangePaymentStatus() http.HandlerFunc
-	GetPaymentStatusByID() http.HandlerFunc
-	GetPaymentsByID() http.HandlerFunc
-	GetPaymentsByEmail() http.HandlerFunc
-	CancelPaymentByID() http.HandlerFunc
+	Create() http.HandlerFunc
+	ChangeStatus() http.HandlerFunc
+	GetStatus() http.HandlerFunc
+	GetByEmailOrID() http.HandlerFunc
+	Cancel() http.HandlerFunc
 }
