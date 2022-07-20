@@ -51,7 +51,7 @@ Response body(JSON):
 "Payment status changed successfully"
 ````
 ___
-3) Проверка статуса платежа по ID. GET https://127.0.0.1:443/get-payment-status-by-id/{id}
+3) Проверка статуса платежа по ID. GET https://127.0.0.1:443/get-payment-status/{id}
 
 Request body: none
 
@@ -60,27 +60,7 @@ Response body(JSON):
 "УСПЕХ"
 ````
 ___
-4) Получение списка всех платежей пользователя по его ID. GET https://127.0.0.1:443/get-payments-by-userid/{id}
-
-Request body: none
-
-Response body(JSON):
-````json
-[
-    {
-        "user-id": 1,
-        "transact-id": 1,
-        "email": "1@email.com",
-        "sum": 100,
-        "currency": "usd",
-        "date-time-create": "2022-06-13T19:35:56.974408Z",
-        "date-time-last-change": "2022-06-13T19:40:27.529686Z",
-        "status": "УСПЕХ"
-    }
-]
-````
-___
-5) Получение списка всех платежей пользователя по его e-mail. GET https://127.0.0.1:443/get-payments-by-email/{email}
+4) Получение списка всех платежей пользователя по email или id. GET https://127.0.0.1:443/get-payments/{path}
 
 Request body: none
 
@@ -100,7 +80,7 @@ Response body(JSON):
 ]
 ````
 ___
-6) Отмена платежа по его ID. PATCH https://127.0.0.1:443/cancel-payment-by-id/{id}
+5) Отмена платежа по ID. PATCH https://127.0.0.1:443/cancel-payment/{id}
 
 Request body: none
 
