@@ -29,7 +29,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) configureRouter() {
-
 	s.router.HandleFunc("/create-payment", s.handler.Payment().Create()).Methods("POST")
 	s.router.HandleFunc("/change-payment-status", s.handler.Payment().ChangeStatus()).Methods("PATCH")
 	s.router.HandleFunc("/get-payment-status/{id}", s.handler.Payment().GetStatus()).Methods("GET")

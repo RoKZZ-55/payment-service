@@ -12,6 +12,7 @@ type PaymentStorage struct {
 	storage *Storage
 }
 
+//Create writing a new payment to the database
 func (s *PaymentStorage) Create(t *model.Transaction) error {
 	return s.storage.db.QueryRow(
 		"INSERT INTO transact (user_id, email, sum, currency, date_time_create, date_time_last_change, status) "+
@@ -24,6 +25,7 @@ func (s *PaymentStorage) Create(t *model.Transaction) error {
 	).Err()
 }
 
+//ChangeStatus changing payment status from database by payment id
 func (s *PaymentStorage) ChangeStatus(t *model.Transaction) error {
 	var statusDB string
 	err := s.storage.db.QueryRow("SELECT status FROM transact WHERE transact_id = $1",
@@ -32,8 +34,8 @@ func (s *PaymentStorage) ChangeStatus(t *model.Transaction) error {
 	if err != nil {
 		return err
 	}
-	if statusDB == "УСПЕХ" || statusDB == "НЕУСПЕХ" {
-		return errors.New(fmt.Sprintf("statuses 'УСПЕХ', 'НЕУСПЕХ' cannot be changed "))
+	if err = changeCheck(statusDB); err != nil {
+		return err
 	}
 	err = s.storage.db.QueryRow(
 		"UPDATE transact SET status = $1, date_time_last_change = now() WHERE transact_id = $2",
@@ -43,11 +45,13 @@ func (s *PaymentStorage) ChangeStatus(t *model.Transaction) error {
 	return err
 }
 
+//GetStatus getting payment status from database by payment id
 func (s *PaymentStorage) GetStatus(transactID uint64) (status string, err error) {
 	err = s.storage.db.QueryRow("SELECT status FROM transact WHERE transact_id = $1", transactID).Scan(&status)
 	return status, err
 }
 
+//GetByEmailOrID receiving all payment data from the database by email or payment ID
 func (s *PaymentStorage) GetByEmailOrID(p *model.Transaction) (transact []model.Transaction, err error) {
 	var rows *sql.Rows
 	if p.Email != "" && p.UserID == 0 {
@@ -87,14 +91,15 @@ func (s *PaymentStorage) GetByEmailOrID(p *model.Transaction) (transact []model.
 	return transact, err
 }
 
+//Cancel changing the payment status in the database by payment ID
 func (s *PaymentStorage) Cancel(transactID uint64) error {
 	var statusDB string
 	err := s.storage.db.QueryRow("SELECT status FROM transact WHERE transact_id = $1", transactID).Scan(&statusDB)
 	if err != nil {
 		return err
 	}
-	if statusDB == "УСПЕХ" || statusDB == "НЕУСПЕХ" {
-		return errors.New(fmt.Sprintf("statuses 'УСПЕХ', 'НЕУСПЕХ' cannot be changed "))
+	if err = changeCheck(statusDB); err != nil {
+		return err
 	}
 	err = s.storage.db.QueryRow(
 		"UPDATE transact SET status = $1, date_time_last_change = now() WHERE transact_id = $2",
@@ -102,4 +107,12 @@ func (s *PaymentStorage) Cancel(transactID uint64) error {
 		transactID,
 	).Err()
 	return err
+}
+
+//changeCheck checking if the status is final, it cannot be changed
+func changeCheck(statusDB string) error {
+	if statusDB == "УСПЕХ" || statusDB == "НЕУСПЕХ" {
+		return errors.New(fmt.Sprintf("statuses 'УСПЕХ', 'НЕУСПЕХ' cannot be changed"))
+	}
+	return nil
 }

@@ -13,6 +13,10 @@ import (
 	"payment-service/internal/storages/dbstorage"
 )
 
+var certFile = "/go/bin/config/server.crt"
+var keyFile = "/go/bin/config/server.key"
+
+//Start starts the https server and injects the dependencies
 func Start(cfg *config.Config, router *mux.Router) error {
 	log.Info("connecting to postgres")
 	db, err := newDB(cfg.Postgres)
@@ -23,14 +27,10 @@ func Start(cfg *config.Config, router *mux.Router) error {
 
 	log.Info("payment service launch")
 	srv := newServer(router, handlers.New(service.New(dbstorage.New(db))), middleware.New(cfg))
-	return http.ListenAndServeTLS(
-		cfg.BindAddr,
-		"/go/bin/config/server.crt",
-		"/go/bin/config/server.key",
-		srv,
-	)
+	return http.ListenAndServeTLS(cfg.BindAddr, certFile, keyFile, srv)
 }
 
+//newDB initializes and checks the connection to the database
 func newDB(pq config.Postgres) (*sql.DB, error) {
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s", pq.User, pq.Password, pq.Host, pq.DBName, pq.SSL)
 	db, err := sql.Open("postgres", dbURL)
